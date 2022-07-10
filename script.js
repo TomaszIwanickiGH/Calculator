@@ -1,5 +1,6 @@
 const res = document.getElementById("display-message")
 let result = ""
+let count = 0
 
 const checkIfChar = () => {
     if (result[result.length - 1] !== '+' &&
@@ -10,102 +11,153 @@ const checkIfChar = () => {
     ) return true
 }
 
+const checkIndexOfChar = () => {
+    if (result.includes("+")) return result.indexOf("+")
+    if (result.includes("-")) return result.indexOf("-")
+    if (result.includes("*")) return result.indexOf("*")
+    if (result.includes("/")) return result.indexOf("/")
+}
+
+const calculate = (first, second) => {
+    if (result.includes("+")) return first + second
+    if (result.includes("-")) return first - second
+    if (result.includes("*")) return first * second
+    if (result.includes("/")) return first / second
+}
+
 document.querySelector("#n0").addEventListener("click", () => {
-    result += "0"
-    res.innerHTML = result
+    if (result.length >= 1) {
+        result += "0"
+        res.innerHTML = result
+    }
+    else {
+        result = ""
+        res.innerHTML = "0"
+    }
 })
 document.querySelector("#n1").addEventListener("click", () => {
     result += "1"
-    document.getElementById("display-message").innerHTML = result
+    res.innerHTML = result
 })
 document.querySelector("#n2").addEventListener("click", () => {
     result += "2"
-    document.getElementById("display-message").innerHTML = result
+    res.innerHTML = result
 })
 document.querySelector("#n3").addEventListener("click", () => {
     result += "3"
-    document.getElementById("display-message").innerHTML = result
+    res.innerHTML = result
 })
 document.querySelector("#n4").addEventListener("click", () => {
     result += "4"
-    document.getElementById("display-message").innerHTML = result
+    res.innerHTML = result
 })
 document.querySelector("#n5").addEventListener("click", () => {
     result += "5"
-    document.getElementById("display-message").innerHTML = result
+    res.innerHTML = result
 })
 document.querySelector("#n6").addEventListener("click", () => {
     result += "6"
-    document.getElementById("display-message").innerHTML = result
+    res.innerHTML = result
 })
 document.querySelector("#n7").addEventListener("click", () => {
     result += "7"
-    document.getElementById("display-message").innerHTML = result
+    res.innerHTML = result
 })
 document.querySelector("#n8").addEventListener("click", () => {
     result += "8"
-    document.getElementById("display-message").innerHTML = result
+    res.innerHTML = result
 })
 document.querySelector("#n9").addEventListener("click", () => {
     result += "9"
-    document.getElementById("display-message").innerHTML = result
+    res.innerHTML = result
 })
 
 document.querySelector("#add").addEventListener("click", () => {
     if (result.length !== 0) {
         if (checkIfChar()) result += "+"
-        document.getElementById("display-message").innerHTML = result
+        res.innerHTML = result
+        document.getElementById("add").disabled = true
+        document.getElementById("subtract").disabled = true
+        document.getElementById("multiply").disabled = true
+        document.getElementById("divide").disabled = true
     } else
-        document.getElementById("display-message").innerHTML = "0"
+        res.innerHTML = "0"
 })
 document.querySelector("#subtract").addEventListener("click", () => {
     if (result.length !== 0) {
         if (checkIfChar()) result += "-"
-        document.getElementById("display-message").innerHTML = result
+        res.innerHTML = result
+        document.getElementById("add").disabled = true
+        document.getElementById("subtract").disabled = true
+        document.getElementById("multiply").disabled = true
+        document.getElementById("divide").disabled = true
     } else
-        document.getElementById("display-message").innerHTML = "0"
+        res.innerHTML = "0"
 })
 document.querySelector("#multiply").addEventListener("click", () => {
     if (result.length !== 0) {
         if (checkIfChar()) result += "*"
-        document.getElementById("display-message").innerHTML = result
+        res.innerHTML = result
+        document.getElementById("add").disabled = true
+        document.getElementById("subtract").disabled = true
+        document.getElementById("multiply").disabled = true
+        document.getElementById("divide").disabled = true
     } else
-        document.getElementById("display-message").innerHTML = "0"
+        res.innerHTML = "0"
 })
 document.querySelector("#divide").addEventListener("click", () => {
     if (result.length !== 0) {
         if (checkIfChar()) result += "/"
-        document.getElementById("display-message").innerHTML = result
+        res.innerHTML = result
+        document.getElementById("add").disabled = true
+        document.getElementById("subtract").disabled = true
+        document.getElementById("multiply").disabled = true
+        document.getElementById("divide").disabled = true
     } else
-        document.getElementById("display-message").innerHTML = "0"
+        res.innerHTML = "0"
 })
 
 const comma = document.querySelector("#comma").addEventListener("click", () => {
     if (result.length !== 0) {
-        if (checkIfChar()) result += ","
-        document.getElementById("display-message").innerHTML = result
+        if (checkIfChar()) result += "."
+        res.innerHTML = result
     } else
-        document.getElementById("display-message").innerHTML = "0"
+        res.innerHTML = "0"
 })
 
 const clear = document.querySelector("#clear").addEventListener("click", () => {
     result = ""
-    document.getElementById("display-message").innerHTML = "0"
+    res.innerHTML = "0"
+    document.getElementById("add").disabled = false
+    document.getElementById("subtract").disabled = false
+    document.getElementById("multiply").disabled = false
+    document.getElementById("divide").disabled = false
 })
 
 document.querySelector("#backspace").addEventListener("click", () => {
     result.length > 0 ? result = result.slice(0, -1) : result = ""
-    document.getElementById("display-message").innerHTML = result
-    if (result.length === 0) document.getElementById("display-message").innerHTML = "0"
+    res.innerHTML = result
+    if (result.length === 0) res.innerHTML = "0"
+    if (!checkIndexOfChar()) {
+        document.getElementById("add").disabled = false
+        document.getElementById("subtract").disabled = false
+        document.getElementById("multiply").disabled = false
+        document.getElementById("divide").disabled = false
+    }
 })
 
-
 document.querySelector("#equals").addEventListener("click", () => {
-    if (checkIfChar()) {
-        const firstNumber = parseFloat(result.slice(0, result.indexOf("+")))
-        const secondNumber = parseFloat(result.slice(result.indexOf("+") + 1, result.length))
-        console.log(firstNumber)
-        console.log(secondNumber)
-        console.log(firstNumber + secondNumber)
+    if (checkIndexOfChar() && checkIfChar()) {
+        const firstNumber = parseFloat(result.slice(0, checkIndexOfChar()))
+        const secondNumber = parseFloat(result.slice(checkIndexOfChar() + 1, result.length))
+        result = calculate(firstNumber, secondNumber)
+        res.innerHTML = result
+        document.getElementById("add").disabled = false
+        document.getElementById("subtract").disabled = false
+        document.getElementById("multiply").disabled = false
+        document.getElementById("divide").disabled = false
+    } else {
+        result = ""
+        res.innerHTML = "0"
     }
 })
